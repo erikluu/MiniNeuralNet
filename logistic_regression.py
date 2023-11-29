@@ -1,26 +1,19 @@
 import numpy as np
 
+"""
+    This module implements logistic regression with a ridge pentaly without the intercept functionality.
+"""
 
-def log_odds(X, B):
+def log_odds(B, X):
     z = np.sum(B * X, axis=1)
     p = 1 / (1 + np.exp(-(z)))
     return p
 
 
 def predict(X, B):
-    """
-    Predict the class labels using logistic regression.
-    
-    Parameters:
-    X (numpy.ndarray): The input features.
-    B (numpy.ndarray): The coefficients of the logistic regression model.
-    
-    Returns:
-    numpy.ndarray: The predicted class labels.
-    """
-    ones = np.ones_like(X[:, 0])
-    ones = np.expand_dims(ones, axis=1)  # Reshape ones to have 2 dimensions
-    X = np.hstack((ones, X))
+    # ones = np.ones_like(X[:, 0])
+    # ones = np.expand_dims(ones, axis=1)  # Reshape ones to have 2 dimensions
+    # X = np.hstack((ones, X))
 
     p = log_odds(B, X)
 
@@ -29,9 +22,9 @@ def predict(X, B):
 
 
 def ridge_gradient(X, c, B, lam):
-    ones = np.ones_like(X[:, 0])
-    ones = np.expand_dims(ones, axis=1)  # Reshape ones to have 2 dimensions
-    X = np.hstack((ones, X))
+    # ones = np.ones_like(X[:, 0])
+    # ones = np.expand_dims(ones, axis=1)  # Reshape ones to have 2 dimensions
+    # X = np.hstack((ones, X))
     
     p = log_odds(B, X)
 
@@ -49,25 +42,13 @@ def stopping_condition(B, B_new, threshold=0.01):
     return np.sum(B - B_new) < threshold
 
 
-def fit(X, c, lam=10, eta=.01, decay_factor=1, max_iter=1e4):
-    """
-    Fit a logistic regression model with ridge regularization.
+def fit(X, y, lam, eta=0.01, decay_factor=0.9, max_iter=1e4):
+    # B = np.zeros(len(X[0])+1)
+    B = np.zeros(len(X[0]))
     
-    Parameters:
-    X (numpy.ndarray): The input features.
-    c (numpy.ndarray): The true class labels.
-    lam (float): The regularization parameter (lambda).
-    eta (float): The learning rate.
-    decay_factor (float): The decay factor for the learning rate.
-    max_iter (int): The maximum number of iterations.
-    
-    Returns:
-    numpy.ndarray: The coefficients of the logistic regression model.
-    """
-    B = np.zeros(len(X[0])+1)
-    
-    for _ in range(max_iter):
-        gradient = ridge_gradient(X, c, B, lam)
+    i = 0
+    while i < 1e4:
+        gradient = ridge_gradient(X, y, B, lam)
         B_new = -eta * gradient + B
         eta = eta * decay_factor
 
@@ -75,5 +56,6 @@ def fit(X, c, lam=10, eta=.01, decay_factor=1, max_iter=1e4):
             return B_new
 
         B = B_new
+        i += 1
 
     return B
