@@ -7,7 +7,7 @@ def log_odds(X, B):
     return p
 
 
-def logistic_regression_predict(X, B):
+def predict(X, B):
     """
     Predict the class labels using logistic regression.
     
@@ -49,7 +49,7 @@ def stopping_condition(B, B_new, threshold=0.01):
     return np.sum(B - B_new) < threshold
 
 
-def fit_logistic_regression_ridge(X, c, lam=10, eta=.01, decay_factor=1, max_iter=1e4):
+def fit(X, c, lam=10, eta=.01, decay_factor=1, max_iter=1e4):
     """
     Fit a logistic regression model with ridge regularization.
     
