@@ -1,1 +1,1 @@
-# MiniNeuralNet
+# PseudoPerceptron
